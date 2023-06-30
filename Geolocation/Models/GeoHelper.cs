@@ -10,6 +10,7 @@ namespace Geolocation.Models
     {
         private readonly HttpClient _httpClient;
         private string apikey = "6e7bffd429766e92c13212450828c6a8";
+        
         public GeoHelper()
         {
             _httpClient = new HttpClient()
@@ -19,7 +20,7 @@ namespace Geolocation.Models
 
         }
 
-        private async Task<string> GetIPAddress()
+        public async Task<string> GetIPAddress()
         {
             var ipAddress = await _httpClient.GetAsync($"http://ipinfo.io/ip");
             if (ipAddress.IsSuccessStatusCode)
@@ -45,6 +46,18 @@ namespace Geolocation.Models
             return "";
         }
 
+        public async Task<string> GetGeoInfoWithIP(string IP)
+        {
+
+            var response = await _httpClient.GetAsync($"http://api.ipstack.com/" + IP + "?access_key=" + apikey);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return json;
+            }
+
+            return "";
+        }
 
     }
 
